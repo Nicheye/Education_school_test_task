@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/DockerFile.python
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 200M
+        reservations:
+          cpus: '0.1'
+          memory: 100M
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - db
+      - redis
+
+  redis:
+    image: redis
+
+  
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
